@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار الرياضيات التفاعلي - الصف السابع</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Arabic Font 'Cairo' -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #3b82f6 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.93);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .bounce-slow {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-3px); }
+            50% { transform: translateY(3px); }
+        }
+        .quiz-option {
+            transition: all 0.25s ease-in-out;
+        }
+        .quiz-option:hover {
+            transform: translateX(-6px);
+        }
+        /* Style for print certificate */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #certificate-print-area, #certificate-print-area * {
+                visibility: visible;
+            }
+            #certificate-print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background: #fff !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-3 sm:p-6 text-gray-800 min-h-screen">
+
+    <div class="w-full max-w-3xl">
+
+        <!-- 1. LOGIN / STUDENT INFO SCREEN -->
+        <div id="login-screen" class="glass-card rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-6 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-yellow-300 rounded-full opacity-40 blur-xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-pink-400 rounded-full opacity-40 blur-xl"></div>
+            
+            <div class="inline-block p-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-2xl shadow-lg text-white mb-2 transform -rotate-2">
+                <i class="fa-solid fa-calculator text-4xl sm:text-5xl"></i>
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-purple-900 leading-snug">
+                اختبار الرياضيات التفاعلي 📐✨
+            </h1>
+            <p class="text-gray-600 text-sm sm:text-base font-semibold">
+                الوحدة التعليمية الأولى: ضرب وقسمة الأعداد العشرية (الصف السابع)
+            </p>
+
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-2xl border border-blue-200 text-right space-y-2">
+                <div class="flex items-center space-x-2 space-x-reverse text-blue-800 font-bold text-sm sm:text-base">
+                    <i class="fa-solid fa-circle-info text-blue-600"></i>
+                    <span>تعليمات الاختبار:</span>
+                </div>
+                <ul class="list-disc list-inside text-xs sm:text-sm text-gray-700 space-y-1 pr-2">
+                    <li>عدد الأسئلة: <b>٥ أسئلة متنوعة</b>.</li>
+                    <li>زمن الاختبار: <b>٢٥ دقيقة</b> (ينتهي العرض تلقائياً عند انتهاء الوقت).</li>
+                    <li>الدرجة الإجمالية: <b>١٠ درجات</b> (درجتان لكل سؤال).</li>
+                    <li>تنبيه: <b>يمكنك تقديم الاختبار مرة واحدة فقط</b> وسوف تحفظ النتيجة نهائياً.</li>
+                </ul>
+            </div>
+
+            <!-- Student Data Inputs -->
+            <form id="start-form" onsubmit="event.preventDefault(); startQuiz();" class="space-y-4 text-right">
+                <div>
+                    <label for="student-name" class="block text-sm font-bold text-gray-700 mb-1">
+                        <i class="fa-solid fa-user-graduate text-purple-600 ml-1"></i> اسم الطالبة الثلاثي:
+                    </label>
+                    <input type="text" id="student-name" required placeholder="أدخلي اسمك الكامل هنا..." 
+                        class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none transition text-base font-semibold text-purple-900 bg-white/80 shadow-sm">
+                </div>
+
+                <div>
+                    <label for="student-class" class="block text-sm font-bold text-gray-700 mb-1">
+                        <i class="fa-solid fa-school text-pink-600 ml-1"></i> الصف الدراسي:
+                    </label>
+                    <select id="student-class" required class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none transition text-base font-semibold text-purple-900 bg-white/80 shadow-sm">
+                        <option value="">اختر الصف...</option>
+                        <option value="سابع / ١">سابع / ١</option>
+                        <option value="سابع / ٢">سابع / ٢</option>
+                        <option value="سابع / ٣">سابع / ٣</option>
+                        <option value="سابع / ٤">سابع / ٤</option>
+                        <option value="سابع / ٥">سابع / ٥</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-lg sm:text-xl rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1 flex items-center justify-center space-x-2 space-x-reverse cursor-pointer">
+                    <span>ابدأ الاختبار الآن</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- 2. QUIZ QUESTION SCREEN -->
+        <div id="quiz-screen" class="hidden glass-card rounded-3xl p-5 sm:p-8 shadow-2xl space-y-6 relative">
+            <!-- Header Status Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-white/90 p-3 sm:p-4 rounded-2xl border border-purple-100 shadow-sm">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold text-lg">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div>
+                        <p id="display-student-name" class="font-extrabold text-purple-900 text-sm sm:text-base"></p>
+                        <p id="display-student-class" class="text-xs text-purple-600 font-bold"></p>
+                    </div>
+                </div>
+
+                <!-- Timer Badge -->
+                <div class="flex items-center space-x-2 space-x-reverse bg-amber-100 text-amber-900 px-4 py-2 rounded-xl border border-amber-300 font-mono font-bold text-base sm:text-lg">
+                    <i class="fa-solid fa-clock text-amber-600 bounce-slow"></i>
+                    <span>الوقت المتبقي:</span>
+                    <span id="timer-display" class="text-red-600 dir-ltr inline-block">25:00</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="space-y-1">
+                <div class="flex justify-between text-xs sm:text-sm font-bold text-gray-600">
+                    <span id="question-tracker">السؤال ١ من ٥</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden p-0.5">
+                    <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all duration-500 w-0"></div>
+                </div>
+            </div>
+
+            <!-- Question Card Container -->
+            <div id="question-card" class="bg-white rounded-2xl p-5 sm:p-7 shadow-md border-2 border-purple-100 space-y-5">
+                <div class="inline-block bg-purple-100 text-purple-800 text-xs sm:text-sm font-extrabold px-3 py-1 rounded-full" id="question-category">
+                    رياضيات - ضرب وقسمة
+                </div>
+                <h2 id="question-text" class="text-lg sm:text-2xl font-bold text-gray-800 leading-relaxed">
+                    <!-- Question text injected here -->
+                </h2>
+
+                <!-- Options List -->
+                <div id="options-container" class="space-y-3 pt-2">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+
+            <!-- Quiz Navigation -->
+            <div class="flex justify-between items-center pt-2">
+                <button id="prev-btn" onclick="navigateQuestion(-1)" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition flex items-center space-x-1 space-x-reverse disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+
+                <button id="next-btn" onclick="navigateQuestion(1)" class="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-md transition flex items-center space-x-1 space-x-reverse">
+                    <span>التالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+
+                <button id="submit-btn" onclick="confirmSubmit()" class="hidden px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg transition flex items-center space-x-1 space-x-reverse">
+                    <i class="fa-solid fa-check"></i>
+                    <span>إنهاء وتسليم الاختبار</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. RESULT & CERTIFICATE SCREEN -->
+        <div id="result-screen" class="hidden glass-card rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-8">
+            <div class="space-y-3">
+                <div class="inline-flex p-4 bg-emerald-100 text-emerald-600 rounded-full text-4xl sm:text-5xl shadow-inner">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h1 class="text-3xl font-extrabold text-purple-900">تم إكمال الاختبار بنجاح! 🎉</h1>
+                <p class="text-gray-600 font-semibold text-sm sm:text-base">تمت إتاحة درجتك وشهادتك أدناه، ولا يمكن إعادة تقديم الاختبار مرة أخرى.</p>
+            </div>
+
+            <!-- Score Badge -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 p-6 rounded-3xl max-w-md mx-auto shadow-sm space-y-2">
+                <p class="text-gray-600 font-bold text-sm">النتيجة النهائية:</p>
+                <div class="text-5xl sm:text-6xl font-black text-amber-600 tracking-tight">
+                    <span id="final-score">0</span> <span class="text-2xl text-gray-500 font-bold">/ ١٠</span>
+                </div>
+                <p id="grade-appreciation" class="text-lg font-bold text-purple-800 pt-2"></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 no-print">
+                <button onclick="scrollToCertificate()" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-md transition flex items-center space-x-2 space-x-reverse">
+                    <i class="fa-solid fa-certificate"></i>
+                    <span>عرض شهادة التقدير</span>
+                </button>
+                <button onclick="window.print()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition flex items-center space-x-2 space-x-reverse">
+                    <i class="fa-solid fa-print"></i>
+                    <span>طباعة أو حفظ الشهادة (PDF)</span>
+                </button>
+            </div>
+
+            <!-- Printable Certificate View -->
+            <div id="certificate-print-area" class="pt-6">
+                <div class="border-8 border-double border-amber-400 p-6 sm:p-10 rounded-3xl bg-gradient-to-b from-white via-amber-50/20 to-white relative shadow-2xl text-center space-y-6 max-w-2xl mx-auto">
+                    <!-- Corner Ornaments -->
+                    <div class="absolute top-3 right-3 text-amber-400 text-2xl"><i class="fa-solid fa-star"></i></div>
+                    <div class="absolute top-3 left-3 text-amber-400 text-2xl"><i class="fa-solid fa-star"></i></div>
+                    <div class="absolute bottom-3 right-3 text-amber-400 text-2xl"><i class="fa-solid fa-star"></i></div>
+                    <div class="absolute bottom-3 left-3 text-amber-400 text-2xl"><i class="fa-solid fa-star"></i></div>
+
+                    <div class="space-y-1">
+                        <p class="text-xs sm:text-sm font-bold text-gray-500">وزارة التربية - دولة الكويت</p>
+                        <h2 class="text-2xl sm:text-3xl font-black text-amber-700 tracking-wide">🏆 شهادة تفوق في الرياضيات 🏆</h2>
+                        <p class="text-xs text-amber-800 font-semibold">بند (١ - ٥) و بند (١ - ٦): ضرب وقسمة الأعداد العشرية</p>
+                    </div>
+
+                    <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
+                        تشهد معلمة المادة بأن الطالبة المتميزة:
+                    </p>
+
+                    <div class="py-2 border-b-2 border-dashed border-amber-300">
+                        <span id="cert-student-name" class="text-2xl sm:text-3xl font-extrabold text-purple-900 underline decoration-amber-400 decoration-wavy"></span>
+                    </div>
+
+                    <p class="text-gray-700 text-sm sm:text-base">
+                        من الصف الدراسي: <b id="cert-student-class" class="text-purple-800"></b>
+                    </p>
+
+                    <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
+                        قد أتمت الاختبار التفاعلي بنجاح وحصلت على درجة:
+                    </p>
+
+                    <div class="inline-block bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-6 py-2 rounded-2xl text-xl sm:text-2xl shadow-sm">
+                        <span id="cert-score"></span> / ١٠
+                    </div>
+
+                    <div class="flex justify-between items-end pt-6 text-xs sm:text-sm font-bold text-gray-600 border-t border-gray-200">
+                        <div>
+                            <p>التاريخ: <span id="cert-date"></span></p>
+                            <p class="text-emerald-700 mt-1"><i class="fa-solid fa-circle-check"></i> اختبار موثق إلكترونياً</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-purple-900 font-extrabold">توقيع المعلمة / التوجيه</p>
+                            <p class="text-xs text-gray-400 font-normal">قسم الرياضيات</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Answers Review Accordion -->
+            <div class="text-right space-y-4 pt-6 no-print">
+                <h3 class="text-xl font-bold text-purple-900 border-b-2 border-purple-200 pb-2">
+                    <i class="fa-solid fa-list-check text-purple-600 ml-1"></i> مراجعة الإجابات والحلول النموذجية:
+                </h3>
+                <div id="review-container" class="space-y-3">
+                    <!-- Reviews injected here -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- QUIZ DATA BASED ON UNIT 1 (LESSONS 1-5 & 1-6) WITH FRESH NUMBERS ---
+        const quizQuestions = [
+            {
+                category: "ضرب الأعداد العشرية (بند ١ - ٥)",
+                question: "أوجد ناتج ضرب العبارة التالية:  ٤٫٢ × ١٫٥ = .....",
+                options: [
+                    "٦٫٣",
+                    "٦٣",
+                    "٠٫٦٣",
+                    "٦٫٠٣"
+                ],
+                correctIndex: 0,
+                explanation: "عند ضرب ٤٢ × ١٥ = ٦٣٠، ونضع الفاصلة العشرية بعد منزلتين (منزلة في ٤٫٢ ومنزلة في ١٫٥)، فيصبح الناتج ٦٫٣٠ أو ٦٫٣"
+            },
+            {
+                category: "مسألة حياتية على الضرب (بند ١ - ٥)",
+                question: "شاركت إحدى المدارس في حملة تشجير، وزرعت شتلات تغطي مساحة ١٢٫٥ مترًا مربعًا لكل صف. إذا كان بالمدرسة ٨ صفوف، فما المساحة الكلية التي تم تغطيتها؟",
+                options: [
+                    "٩٦ مترًا مربعًا",
+                    "١٠٠ متر مربع",
+                    "١٠٥ أمتار مربعة",
+                    "١٢٥ مترًا مربعًا"
+                ],
+                correctIndex: 1,
+                explanation: "المساحة الكلية = ١٢٫٥ × ٨ = ١٠٠٫٠ متر مربع."
+            },
+            {
+                category: "قسمة عدد عشري على عدد كلي (بند ١ - ٦)",
+                question: "احسب ناتج قسمة:  ٧٫٥ ÷ ٥ = .....",
+                options: [
+                    "٠٫١٥",
+                    "١٫٥",
+                    "١٥",
+                    "٠٫٧٥"
+                ],
+                correctIndex: 1,
+                explanation: "نقسم ٧ ÷ ٥ = ١ ويبقى ٢، نرفع الفاصلة، ثم ٢٥ ÷ ٥ = ٥. فيكون الناتج النهائي ١٫٥."
+            },
+            {
+                category: "القسمة على عدد عشري (بند ١ - ٦)",
+                question: "عند إيجاد ناتج القسمة: ٣٫٦ ÷ ٠٫٤ ، فإننا نضرب المقسوم والمقسوم عليه في ١٠ فتصبح المسألة وأسهل حلاً بالصورة:",
+                options: [
+                    "٣٦ ÷ ٤ = ٩",
+                    "٣٫٦ ÷ ٤ = ٠٫٩",
+                    "٣٦ ÷ ٤٠ = ٠٫٩",
+                    "٣٦٠ ÷ ٤ = ٩٠"
+                ],
+                correctIndex: 0,
+                explanation: "للتخلص من الفاصلة في المقسوم عليه (٠٫٤)، نضرب الطرفين × ١٠ فتتحول إلى ٣٦ ÷ ٤ = ٩."
+            },
+            {
+                category: "مسألة لفظية - قسمة الأعداد العشرية (بند ١ - ٦)",
+                question: "اشترت مريم ٦ كتب متماثلة بمبلغ إجمالي قدره ١٦٫٢ دينارًا كويتيًا. ما ثمن الكتاب الواحد بالدنانير؟",
+                options: [
+                    "٢٫٥ دينار",
+                    "٢٫٧ دينار",
+                    "٣٫٢ دنانير",
+                    "٢٫٠٧ دينار"
+                ],
+                correctIndex: 1,
+                explanation: "ثمن الكتاب الواحد = ١٦٫٢ ÷ ٦ = ٢٫٧ دينار كويتي."
+            }
+        ];
+
+        // --- APP STATE VARIABLES ---
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizQuestions.length).fill(null);
+        let studentData = { name: "", class: "" };
+        let timerSeconds = 25 * 60; // 25 minutes timer
+        let timerInterval = null;
+        const STORAGE_KEY = "kuwait_math_g7_quiz_result_saved";
+
+        // Numbers formatted in Arabic numerals helper
+        function toArabicDigits(str) {
+            const hindiDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            return String(str).replace(/[0-9]/g, w => hindiDigits[+w]);
+        }
+
+        // On Page Load: Check if already completed
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedResult = localStorage.getItem(STORAGE_KEY);
+            if (savedResult) {
+                const parsed = JSON.parse(savedResult);
+                showFinalResults(parsed);
+            }
+        });
+
+        // --- START QUIZ FUNCTION ---
+        function startQuiz() {
+            const nameInput = document.getElementById("student-name").value.trim();
+            const classInput = document.getElementById("student-class").value;
+
+            if (!nameInput || !classInput) return;
+
+            studentData.name = nameInput;
+            studentData.class = classInput;
+
+            document.getElementById("display-student-name").innerText = studentData.name;
+            document.getElementById("display-student-class").innerText = "الصف: " + studentData.class;
+
+            document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("quiz-screen").classList.remove("hidden");
+
+            startTimer();
+            renderQuestion();
+        }
+
+        // --- TIMER FUNCTIONALITY ---
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("انتهى وقت الاختبار المخصص (٢٥ دقيقة)! سيتم تسليم إجاباتك الآن.");
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            const formatted = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            document.getElementById("timer-display").innerText = toArabicDigits(formatted);
+        }
+
+        // --- RENDER QUESTION ---
+        function renderQuestion() {
+            const q = quizQuestions[currentQuestionIndex];
+
+            // Category & Text
+            document.getElementById("question-category").innerText = q.category;
+            document.getElementById("question-text").innerText = q.question;
+
+            // Tracker & Progress
+            const currentNumArabic = toArabicDigits(currentQuestionIndex + 1);
+            const totalNumArabic = toArabicDigits(quizQuestions.length);
+            document.getElementById("question-tracker").innerText = `السؤال ${currentNumArabic} من ${totalNumArabic}`;
+
+            const percent = Math.round(((currentQuestionIndex + 1) / quizQuestions.length) * 100);
+            document.getElementById("progress-percent").innerText = toArabicDigits(percent) + "%";
+            document.getElementById("progress-bar").style.width = percent + "%";
+
+            // Render Options
+            const container = document.getElementById("options-container");
+            container.innerHTML = "";
+
+            const optionPrefixes = ["أ", "ب", "ج", "د"];
+
+            q.options.forEach((optText, idx) => {
+                const isSelected = userAnswers[currentQuestionIndex] === idx;
+                
+                const optBtn = document.createElement("button");
+                optBtn.className = `quiz-option w-full p-4 rounded-xl border-2 text-right flex items-center space-x-3 space-x-reverse font-bold text-base sm:text-lg transition cursor-pointer ${
+                    isSelected 
+                    ? "bg-purple-100 border-purple-600 text-purple-900 shadow-md" 
+                    : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-purple-50 hover:border-purple-300"
+                }`;
+
+                optBtn.onclick = () => selectOption(idx);
+
+                optBtn.innerHTML = `
+                    <span class="w-8 h-8 rounded-lg ${isSelected ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-600'} flex items-center justify-center font-extrabold text-sm">
+                        ${optionPrefixes[idx]}
+                    </span>
+                    <span class="flex-1">${optText}</span>
+                    ${isSelected ? '<i class="fa-solid fa-circle-check text-purple-600 text-xl"></i>' : ''}
+                `;
+
+                container.appendChild(optBtn);
+            });
+
+            // Update Navigation Buttons
+            document.getElementById("prev-btn").disabled = currentQuestionIndex === 0;
+
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                document.getElementById("next-btn").classList.add("hidden");
+                document.getElementById("submit-btn").classList.remove("hidden");
+            } else {
+                document.getElementById("next-btn").classList.remove("hidden");
+                document.getElementById("submit-btn").classList.add("hidden");
+            }
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestionIndex] = index;
+            renderQuestion();
+        }
+
+        function navigateQuestion(direction) {
+            currentQuestionIndex += direction;
+            if (currentQuestionIndex < 0) currentQuestionIndex = 0;
+            if (currentQuestionIndex >= quizQuestions.length) currentQuestionIndex = quizQuestions.length - 1;
+            renderQuestion();
+        }
+
+        function confirmSubmit() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                const msg = `لديك (${toArabicDigits(unanswered)}) سؤال/أسئلة لم تقمي بإجابتها بعد. هل أنت متأكدة من تسليم الاختبار؟`;
+                if (!window.confirm(msg)) return;
+            }
+            finishQuiz();
+        }
+
+        // --- FINISH & SCORE QUIZ ---
+        function finishQuiz() {
+            clearInterval(timerInterval);
+
+            // Calculate Score (Each question = 2 points, Total = 10)
+            let score = 0;
+            quizQuestions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correctIndex) {
+                    score += 2;
+                }
+            });
+
+            const today = new Date().toLocaleDateString('ar-KW', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            const resultData = {
+                studentName: studentData.name,
+                studentClass: studentData.class,
+                score: score,
+                maxScore: 10,
+                userAnswers: userAnswers,
+                date: today
+            };
+
+            // Save state permanently so student cannot re-take
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(resultData));
+
+            showFinalResults(resultData);
+        }
+
+        function showFinalResults(data) {
+            document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("quiz-screen").classList.add("hidden");
+            document.getElementById("result-screen").classList.remove("hidden");
+
+            // Fill Scores & Cert Details
+            document.getElementById("final-score").innerText = toArabicDigits(data.score);
+            document.getElementById("cert-student-name").innerText = data.studentName;
+            document.getElementById("cert-student-class").innerText = data.studentClass;
+            document.getElementById("cert-score").innerText = toArabicDigits(data.score);
+            document.getElementById("cert-date").innerText = data.date;
+
+            // Appreciation text based on score
+            let appreciation = "";
+            if (data.score === 10) appreciation = "ممتازة جداً! أدائك كامل ورائع 🌟👏";
+            else if (data.score >= 8) appreciation = "جيد جداً مرتفع! أحسنتِ صنعاً 👍✨";
+            else if (data.score >= 6) appreciation = "جيد! جهود طيبة ويمكنك التحسن أكثر 📚";
+            else appreciation = "تحتاجين إلى مراجعة درس ضرب وقسمة الأعداد العشرية جلياً 💡";
+
+            document.getElementById("grade-appreciation").innerText = appreciation;
+
+            // Render Answer Review Cards
+            const reviewContainer = document.getElementById("review-container");
+            reviewContainer.innerHTML = "";
+
+            quizQuestions.forEach((q, idx) => {
+                const userChoice = data.userAnswers[idx];
+                const isCorrect = userChoice === q.correctIndex;
+
+                const card = document.createElement("div");
+                card.className = `p-4 rounded-2xl border-2 text-right space-y-2 ${
+                    isCorrect ? "bg-emerald-50 border-emerald-300" : "bg-red-50 border-red-300"
+                }`;
+
+                const userAnsText = userChoice !== null ? q.options[userChoice] : "لم يتم الحل";
+                const correctAnsText = q.options[q.correctIndex];
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between font-bold">
+                        <span class="text-sm text-gray-600">السؤال ${toArabicDigits(idx + 1)}</span>
+                        <span class="${isCorrect ? 'text-emerald-700' : 'text-red-700'} text-sm font-extrabold flex items-center gap-1">
+                            ${isCorrect ? '<i class="fa-solid fa-circle-check"></i> إجابة صحيحة (+٢)' : '<i class="fa-solid fa-circle-xmark"></i> إجابة خاطئة (٠)'}
+                        </span>
+                    </div>
+                    <p class="font-bold text-gray-800">${q.question}</p>
+                    <div class="text-xs sm:text-sm space-y-1 pt-1">
+                        <p class="${isCorrect ? 'text-emerald-800' : 'text-red-800'}"><b>إجابتك:</b> ${userAnsText}</p>
+                        ${!isCorrect ? `<p class="text-emerald-800"><b>الإجابة الصحيحة:</b> ${correctAnsText}</p>` : ''}
+                        <p class="text-gray-600 bg-white/70 p-2 rounded-xl mt-1 border border-gray-200">💡 <b>الشرح:</b> ${q.explanation}</p>
+                    </div>
+                `;
+
+                reviewContainer.appendChild(card);
+            });
+        }
+
+        function scrollToCertificate() {
+            document.getElementById("certificate-print-area").scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
